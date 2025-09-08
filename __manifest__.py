@@ -29,13 +29,28 @@ Long description of module's purpose
         #wizard
         # 'wizard/inventory_transfer_wizard.xml',
         
-        
         #Views
         'views/inventory_transfer_views.xml',
         'views/stock_picking_view.xml',
         
         
     ],
+    'assets': {
+        # 'point_of_sale.assets': [
+        #     # 'new_modules_customization/static/src/js/customer_display.js',
+        #     'new_modules_customization/static/src/js/customer_displayy.js',
+        #     'new_modules_customization/static/src/xml/customer_display.xml',
+        #     'new_modules_customization/static/src/css/customer_display.css',
+        # ]
+        'point_of_sale.assets': [
+            'new_modules_customization/static/src/js/pos_customer_display.js',
+            'new_modules_customization/static/src/xml/pos_customer_display.xml',
+            'new_modules_customization/static/src/css/pos_customer_display.css',
+        ],
+    },
+     
+    'installable': True,
+    'auto_install': False,
     
 }
 

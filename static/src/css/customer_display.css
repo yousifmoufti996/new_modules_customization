@@ -1,0 +1,61 @@
+
+
+.customer-info-box {
+    direction: rtl;
+    text-align: right;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px;
+    font-family: 'Tahoma', 'Arial', sans-serif;
+}
+
+.customer-name {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.customer-phones div,
+.customer-balance div,
+.customer-extra div {
+    margin: 5px 0;
+    padding: 3px 0;
+}
+
+.badge-success {
+    background-color: #28a745;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+}
+
+.customer-balance strong {
+    color: #dc3545;
+}
+
+.customer-phones {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+}
+
+.customer-extra {
+    border-top: 1px solid #eee;
+    padding-top: 8px;
+    margin-top: 8px;
+    font-size: 0.9em;
+    color: #666;
+}

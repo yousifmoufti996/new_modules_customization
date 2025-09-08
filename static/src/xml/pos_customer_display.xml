@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <!-- Extend PaymentScreen to show customer info -->
+    <t t-name="point_of_sale.PaymentScreen" t-inherit="true" t-inherit-mode="extension" owl="1">
+        
+        <!-- Add customer info panel after the partner selection -->
+        <xpath expr="//div[hasclass('partner-wrapper')]" position="after">
+            <div class="customer-info-panel" t-if="customerInfo.data">
+                
+                <!-- Customer Header -->
+                <div class="customer-header">
+                    <h4 class="customer-name">
+                        <i class="fa fa-user me-2"></i>
+                        <t t-esc="customerInfo.data.name"/>
+                    </h4>
+                    <span t-attf-class="badge {{ getStatusClass(customerInfo.data.status) }}">
+                        <t t-esc="getStatusText(customerInfo.data.status)"/>
+                    </span>
+                </div>
+
+                <!-- Customer Details Grid -->
+                <div class="customer-details">
+                    
+                    <!-- Phone Numbers -->
+                    <div class="row mb-2" t-if="customerInfo.data.phone or customerInfo.data.mobile">
+                        <div class="col-6" t-if="customerInfo.data.phone">
+                            <small class="text-muted">📞 الهاتف الأول</small><br/>
+                            <strong t-esc="customerInfo.data.phone"/>
+                        </div>
+                        <div class="col-6" t-if="customerInfo.data.mobile">
+                            <small class="text-muted">📱 الهاتف الثاني</small><br/>
+                            <strong t-esc="customerInfo.data.mobile"/>
+                        </div>
+                    </div>
+
+                    <!-- Family Number -->
+                    <div class="row mb-2" t-if="customerInfo.data.family_number">
+                        <div class="col-12">
+                            <small class="text-muted">👨‍👩‍👧‍👦 الرقم العائلي</small><br/>
+                            <strong t-esc="customerInfo.data.family_number"/>
+                        </div>
+                    </div>
+
+                    <!-- Balance and Days -->
+                    <div class="row mb-2">
+                        <div class="col-6">
+                            <small class="text-muted">💰 الرصيد المستحق</small><br/>
+                            <strong class="text-danger" t-esc="formatCurrency(customerInfo.data.balance)"/>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted">📅 الأيام المتبقية</small><br/>
+                            <strong class="text-success" t-esc="formatDays(customerInfo.data.remaining_days)"/>
+                        </div>
+                    </div>
+
+                    <!-- Region -->
+                    <div class="row mb-2" t-if="customerInfo.data.region">
+                        <div class="col-12">
+                            <small class="text-muted">📍 المنطقة</small><br/>
+                            <strong t-esc="customerInfo.data.region"/>
+                        </div>
+                    </div>
+
+                    <!-- Categories -->
+                    <div class="row mb-2" t-if="customerInfo.data.categories">
+                        <div class="col-12">
+                            <small class="text-muted">🏷️ التصنيف</small><br/>
+                            <span class="badge badge-info" t-esc="customerInfo.data.categories"/>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+            <!-- Loading indicator -->
+            <div class="customer-loading text-center p-3" t-if="customerInfo.loading">
+                <i class="fa fa-spinner fa-spin"></i>
+                <span class="ms-2">جاري تحميل بيانات العميل...</span>
+            </div>
+            
+        </xpath>
+    </t>
+
+</templates>

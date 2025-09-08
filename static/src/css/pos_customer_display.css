@@ -1,0 +1,105 @@
+/* Working POS Customer Display CSS */
+/* File: static/src/css/pos_customer_display.css */
+
+.customer-info-panel {
+    direction: rtl;
+    text-align: right;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px 0;
+    font-family: 'Tahoma', 'Arial', sans-serif;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.customer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #007bff;
+}
+
+.customer-name {
+    color: #2c3e50;
+    margin: 0;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.customer-details {
+    font-size: 14px;
+}
+
+.customer-details .row {
+    margin-bottom: 8px;
+}
+
+.customer-details small {
+    display: block;
+    font-size: 11px;
+    color: #6c757d;
+    margin-bottom: 2px;
+}
+
+.customer-details strong {
+    font-size: 13px;
+    color: #495057;
+}
+
+.badge {
+    font-size: 0.8em;
+    padding: 4px 8px;
+    border-radius: 12px;
+}
+
+.text-success {
+    color: #28a745 !important;
+}
+
+.text-danger {
+    color: #dc3545 !important;
+}
+
+.badge-info {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.customer-loading {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    color: #6c757d;
+    margin: 10px 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .customer-info-panel {
+        margin: 5px 0;
+        padding: 10px;
+    }
+    
+    .customer-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .customer-name {
+        margin-bottom: 5px;
+    }
+}
+
+/* RTL specific adjustments */
+.customer-info-panel .fa {
+    margin-left: 5px;
+    margin-right: 0;
+}
+
+.customer-info-panel .ms-2 {
+    margin-right: 8px !important;
+    margin-left: 0 !important;
+}

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<templates id="template" xml:space="preserve">
+
+    <!-- Simple customer info display -->
+    <t t-name="PosCustomerDisplay" owl="1">
+        <div class="customer-info-box" t-if="customerDisplayInfo">
+            
+            <!-- Customer name in Arabic -->
+            <div class="customer-name">
+                <strong t-esc="customerDisplayInfo.name"/>
+                <span t-attf-class="badge badge-{{customerDisplayInfo.status_class}}">
+                    <t t-esc="customerDisplayInfo.status"/>
+                </span>
+            </div>
+            
+            <!-- Phone numbers -->
+            <div class="customer-phones">
+                <div t-if="customerDisplayInfo.phone">
+                    📞 <t t-esc="customerDisplayInfo.phone"/>
+                </div>
+                <div t-if="customerDisplayInfo.mobile">
+                    📱 <t t-esc="customerDisplayInfo.mobile"/>
+                </div>
+            </div>
+            
+            <!-- Balance and days -->
+            <div class="customer-balance">
+                <div>💰 الرصيد: <strong t-esc="customerDisplayInfo.balance"/></div>
+                <div>📅 <t t-esc="customerDisplayInfo.remaining_days"/></div>
+            </div>
+            
+            <!-- Additional info -->
+            <div class="customer-extra" t-if="customerDisplayInfo.family_number or customerDisplayInfo.region">
+                <div t-if="customerDisplayInfo.family_number">
+                    👨‍👩‍👧‍👦 الرقم العائلي: <t t-esc="customerDisplayInfo.family_number"/>
+                </div>
+                <div t-if="customerDisplayInfo.region">
+                    📍 المنطقة: <t t-esc="customerDisplayInfo.region"/>
+                </div>
+            </div>
+            
+        </div>
+    </t>
+
+</templates>
