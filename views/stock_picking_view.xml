@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_picking_form_internal_locations" model="ir.ui.view">
-        <field name="name">stock.picking.form.internal.locations</field>
+    <record id="view_picking_form_hide_partner_locations" model="ir.ui.view">
+        <field name="name">stock.picking.form.hide.partner.locations</field>
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
-            <field name="location_dest_id" position="attributes">
-                <attribute name="domain">[('usage', 'in', ['internal', 'view']), ('name', 'not ilike', 'Partners'), ('name', 'not ilike', 'Customer'), ('name', 'not ilike', 'Vendor')]</attribute>
-            </field>
+            <xpath expr="//field[@name='location_dest_id']" position="attributes">
+                <attribute name="domain">[('usage', 'in', ['internal', 'view']), ('name', 'not ilike', 'Partners')]</attribute>
+                <attribute name="context">{'hide_partner_locations': True}</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>
