@@ -92,7 +92,8 @@ class StockMove(models.Model):
             # available_qty = current_qty - pending_out_qty
             # Get reserved quantities from quants
             reserved_qty = sum(quants.mapped('reserved_quantity'))
-            available_qty = current_qty - reserved_qty
+            # available_qty = current_qty - reserved_qty
+            available_qty = current_qty #- reserved_qty
             
             _logger.info(f"Final available quantity: {available_qty} ({current_qty} - {pending_out_qty})")
             
