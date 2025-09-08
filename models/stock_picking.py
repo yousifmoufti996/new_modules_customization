@@ -108,25 +108,25 @@ class StockPicking(models.Model):
         
         _logger.info("=== TRANSFER PERMISSIONS CHECK COMPLETED ===")
         
-    @api.onchange('picking_type_id')
-    def _onchange_picking_type_id(self):
-        res = super()._onchange_picking_type_id()
-        if not res:
-            res = {}
+    # @api.onchange('picking_type_id')
+    # def _onchange_picking_type_id(self):
+    #     res = super()._onchange_picking_type_id()
+    #     if not res:
+    #         res = {}
         
-        if self.picking_type_id and self.picking_type_id.code == 'internal':
-            domain = [
-                ('usage', 'in', ['internal', 'view']),
-                ('name', 'not ilike', 'Partners')
-            ]
+    #     if self.picking_type_id and self.picking_type_id.code == 'internal':
+    #         domain = [
+    #             ('usage', 'in', ['internal', 'view']),
+    #             ('name', 'not ilike', 'Partners')
+    #         ]
             
-            if 'domain' not in res:
-                res['domain'] = {}
+    #         if 'domain' not in res:
+    #             res['domain'] = {}
             
-            res['domain']['location_dest_id'] = domain
-            res['domain']['location_id'] = domain
+    #         res['domain']['location_dest_id'] = domain
+    #         res['domain']['location_id'] = domain
         
-        return res
+    #     return res
     
     def _get_internal_locations_domain(self):
         return [
