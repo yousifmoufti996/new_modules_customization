@@ -107,3 +107,39 @@ class StockPicking(models.Model):
                 _logger.info(f"Permission check skipped - State: {picking.state}, Type: {picking.picking_type_id.code}")
         
         _logger.info("=== TRANSFER PERMISSIONS CHECK COMPLETED ===")
+        
+        
+    @api.onchange('picking_type_id')
+    def _onchange_picking_type_internal_locations_only(self):
+        """For internal transfers, show only warehouse/internal locations"""
+        result = {}
+        
+        if self.picking_type_id and self.picking_type_id.code == 'internal':
+            # Get all internal locations (excluding partner-related ones)
+            internal_locations = self.env['stock.location'].search([
+                ('usage', '=', 'internal'),  # Only internal usage
+                ('name', 'not ilike', '%Partners%'),  # Exclude anything with Partners
+                ('name', 'not ilike', '%Customer%'),  # Exclude customer locations  
+                ('name', 'not ilike', '%Vendor%'),    # Exclude vendor locations
+                ('name', 'not ilike', '%Supplier%'),  # Exclude supplier locations
+            ])
+            
+            # Also include view locations for navigation (like WH/Stock)
+            view_locations = self.env['stock.location'].search([
+                ('usage', '=', 'view'),
+                ('name', 'not ilike', '%Partners%'),
+                ('name', 'not ilike', '%Customer%'),
+                ('name', 'not ilike', '%Vendor%'),
+                ('name', 'not ilike', '%Supplier%'),
+            ])
+            
+            allowed_locations = internal_locations + view_locations
+            
+            result = {
+                'domain': {
+                    'location_id': [('id', 'in', allowed_locations.ids)],
+                    'location_dest_id': [('id', 'in', allowed_locations.ids)],
+                }
+            }
+        
+        return result
