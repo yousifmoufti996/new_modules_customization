@@ -109,27 +109,3 @@ class StockPicking(models.Model):
         _logger.info("=== TRANSFER PERMISSIONS CHECK COMPLETED ===")
         
         
-    @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        """Override to add domain to location fields for internal transfers"""
-        result = super().fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
-        
-        if view_type == 'form':
-            # Add domain to exclude partner locations for internal transfers
-            doc = etree.XML(result['arch'])
-            
-            # Find location fields and add domain
-            for field in ['location_id', 'location_dest_id']:
-                field_nodes = doc.xpath(f"//field[@name='{field}']")
-                for node in field_nodes:
-                    domain = [
-                        ('usage', 'in', ['internal', 'view']),
-                        ('name', 'not ilike', 'Partners'),
-                        ('name', 'not ilike', 'Customer'),  
-                        ('name', 'not ilike', 'Vendor')
-                    ]
-                    node.set('domain', str(domain))
-            
-            result['arch'] = etree.tostring(doc, encoding='unicode')
-        
-        return result

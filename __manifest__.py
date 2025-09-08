@@ -32,6 +32,7 @@ Long description of module's purpose
         
         #Views
         'views/inventory_transfer_views.xml',
+        'views/stock_picking_view.xml',
         
         
     ],
