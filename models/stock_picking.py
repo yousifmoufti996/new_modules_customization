@@ -110,12 +110,25 @@ class StockPicking(models.Model):
         
 
     def _get_internal_locations_domain(self):
-        return [
-            ('usage', 'in', ['internal', 'view']),
-            ('name', 'not ilike', 'Partners'),
-            ('name', 'not ilike', 'Customer'),
-            ('name', 'not ilike', 'Vendor')
+        user = self.env.user
+        unrestricted_groups = [
+            'base.group_system',  # Administrator
+            # 'stock.group_stock_manager',  # Inventory Manager
+            'new_modules_customization.group_inventory_transfer_manager'
         ]
+        has_unrestricted_access = any(user.has_group(group) for group in unrestricted_groups)
+        if has_unrestricted_access:
+        # Admin/Manager can see all locations for source
+        
+            return []       
+        else:
+            # Regular users see restricted source locations
+            return [
+                ('usage', 'in', ['internal', 'view']),
+                ('name', 'not ilike', 'Partners'),
+                ('name', 'not ilike', 'Customer'),
+                ('name', 'not ilike', 'Vendor')
+            ]
     
     location_dest_id = fields.Many2one(
         domain=lambda self: self._get_internal_locations_domain()
