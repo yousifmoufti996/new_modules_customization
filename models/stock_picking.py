@@ -117,11 +117,15 @@ class StockPicking(models.Model):
             'new_modules_customization.group_inventory_transfer_manager'
         ]
         has_unrestricted_access = any(user.has_group(group) for group in unrestricted_groups)
+        _logger.info("=== DETERMINING LOCATION DOMAIN ===")
+        _logger.info("unrestricted_groups: %s", unrestricted_groups)
+        _logger.info("user: %s", user)
         if has_unrestricted_access:
         # Admin/Manager can see all locations for source
-        
+            _logger.info("User has unrestricted access to locations")
             return []       
         else:
+            _logger.info("elseeeeUser has restricted access to locations")
             # Regular users see restricted source locations
             return [
                 ('usage', 'in', ['internal', 'view']),
