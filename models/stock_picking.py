@@ -109,41 +109,27 @@ class StockPicking(models.Model):
         _logger.info("=== TRANSFER PERMISSIONS CHECK COMPLETED ===")
         
         
-    @api.onchange('picking_type_id')
-    def _onchange_picking_type_internal_locations_only(self):
-        """For internal transfers, show only warehouse/internal locations"""
-        _logger.error("  For internal transfers, show only warehouse/internal locations")
-        result = {}
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        """Override to add domain to location fields for internal transfers"""
+        result = super().fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
         
-        if self.picking_type_id and self.picking_type_id.code == 'internal':
-            _logger.error("  if self.picking_type_id ")
-            # Get all internal locations (excluding partner-related ones)
-            internal_locations = self.env['stock.location'].search([
-                ('usage', '=', 'internal'),  # Only internal usage
-                ('name', 'not ilike', '%Partners%'),  # Exclude anything with Partners
-                ('name', 'not ilike', '%Customer%'),  # Exclude customer locations  
-                ('name', 'not ilike', '%Vendor%'),    # Exclude vendor locations
-                ('name', 'not ilike', '%Supplier%'),  # Exclude supplier locations
-            ])
+        if view_type == 'form':
+            # Add domain to exclude partner locations for internal transfers
+            doc = etree.XML(result['arch'])
             
-            # Also include view locations for navigation (like WH/Stock)
-            view_locations = self.env['stock.location'].search([
-                ('usage', '=', 'view'),
-                ('name', 'not ilike', '%Partners%'),
-                ('name', 'not ilike', '%Customer%'),
-                ('name', 'not ilike', '%Vendor%'),
-                ('name', 'not ilike', '%Supplier%'),
-            ])
+            # Find location fields and add domain
+            for field in ['location_id', 'location_dest_id']:
+                field_nodes = doc.xpath(f"//field[@name='{field}']")
+                for node in field_nodes:
+                    domain = [
+                        ('usage', 'in', ['internal', 'view']),
+                        ('name', 'not ilike', 'Partners'),
+                        ('name', 'not ilike', 'Customer'),  
+                        ('name', 'not ilike', 'Vendor')
+                    ]
+                    node.set('domain', str(domain))
             
-            allowed_locations = internal_locations + view_locations
-            
-            _logger.error(" allowed_locations")
-            result = {
-                'domain': {
-                    'location_id': [('id', 'in', allowed_locations.ids)],
-                    'location_dest_id': [('id', 'in', allowed_locations.ids)],
-                }
-            }
-        _logger.error(" return result")
+            result['arch'] = etree.tostring(doc, encoding='unicode')
         
         return result
