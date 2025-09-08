@@ -108,26 +108,7 @@ class StockPicking(models.Model):
         
         _logger.info("=== TRANSFER PERMISSIONS CHECK COMPLETED ===")
         
-    # @api.onchange('picking_type_id')
-    # def _onchange_picking_type_id(self):
-    #     res = super()._onchange_picking_type_id()
-    #     if not res:
-    #         res = {}
-        
-    #     if self.picking_type_id and self.picking_type_id.code == 'internal':
-    #         domain = [
-    #             ('usage', 'in', ['internal', 'view']),
-    #             ('name', 'not ilike', 'Partners')
-    #         ]
-            
-    #         if 'domain' not in res:
-    #             res['domain'] = {}
-            
-    #         res['domain']['location_dest_id'] = domain
-    #         res['domain']['location_id'] = domain
-        
-    #     return res
-    
+
     def _get_internal_locations_domain(self):
         return [
             ('usage', 'in', ['internal', 'view']),
@@ -137,5 +118,8 @@ class StockPicking(models.Model):
         ]
     
     location_dest_id = fields.Many2one(
+        domain=lambda self: self._get_internal_locations_domain()
+    )
+    location_id = fields.Many2one(
         domain=lambda self: self._get_internal_locations_domain()
     )
