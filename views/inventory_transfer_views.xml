@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Your existing records -->
+        <record id="action_inventory_transfer_wizard" model="ir.actions.act_window">
+            <field name="name">Validate Transfer</field>
+            <field name="res_model">inventory.transfer.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="view_inventory_transfer_wizard_form" model="ir.ui.view">
+            <field name="name">inventory.transfer.wizard.form</field>
+            <field name="model">inventory.transfer.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Validate Inventory Transfer">
+                    <sheet>
+                        <group>
+                            <field name="picking_id" readonly="1"/>
+                        </group>
+                        <field name="line_ids">
+                            <tree decoration-danger="not is_valid">
+                                <field name="product_id"/>
+                                <field name="location_id"/>
+                                <field name="requested_qty"/>
+                                <field name="available_qty"/>
+                                <field name="is_valid"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                    <footer>
+                        <button name="action_confirm_transfer" type="object" 
+                                string="Confirm Transfer" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Add button to stock picking form -->
+        <record id="view_picking_form_inherit" model="ir.ui.view">
+            <field name="name">stock.picking.form.inherit</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_validate']" position="after">
+                    <button name="%(action_inventory_transfer_wizard)d" 
+                            type="action" 
+                            string="Validate with Check" 
+                            class="oe_highlight"
+                            groups="new_modules_customization.group_inventory_transfer_manager"
+                            context="{'default_picking_id': active_id}"
+                            invisible="state != 'assigned'"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

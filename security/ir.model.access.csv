@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_inventory_transfer_wizard,inventory.transfer.wizard,model_inventory_transfer_wizard,group_inventory_transfer_manager,1,1,1,1
+access_inventory_transfer_wizard_line,inventory.transfer.wizard.line,model_inventory_transfer_wizard_line,group_inventory_transfer_manager,1,1,1,1
+access_inventory_transfer_wizard_user,inventory.transfer.wizard,model_inventory_transfer_wizard,base.group_user,1,0,0,0
+access_inventory_transfer_wizard_line_user,inventory.transfer.wizard.line,model_inventory_transfer_wizard_line,base.group_user,1,0,0,0
