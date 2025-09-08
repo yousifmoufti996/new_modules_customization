@@ -112,9 +112,11 @@ class StockPicking(models.Model):
     @api.onchange('picking_type_id')
     def _onchange_picking_type_internal_locations_only(self):
         """For internal transfers, show only warehouse/internal locations"""
+        _logger.error("  For internal transfers, show only warehouse/internal locations")
         result = {}
         
         if self.picking_type_id and self.picking_type_id.code == 'internal':
+            _logger.error("  if self.picking_type_id ")
             # Get all internal locations (excluding partner-related ones)
             internal_locations = self.env['stock.location'].search([
                 ('usage', '=', 'internal'),  # Only internal usage
@@ -135,11 +137,13 @@ class StockPicking(models.Model):
             
             allowed_locations = internal_locations + view_locations
             
+            _logger.error(" allowed_locations")
             result = {
                 'domain': {
                     'location_id': [('id', 'in', allowed_locations.ids)],
                     'location_dest_id': [('id', 'in', allowed_locations.ids)],
                 }
             }
+        _logger.error(" return result")
         
         return result
