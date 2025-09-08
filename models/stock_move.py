@@ -19,35 +19,35 @@ class StockMove(models.Model):
             _logger.info(f"Move state: {move.state}")
             _logger.info(f"Picking type: {move.picking_type_id.code if move.picking_type_id else 'No picking type'}")
             
-            if move.picking_type_id and move.picking_type_id.code == 'outgoing':
-                _logger.info("Processing outgoing move - checking available quantity")
+            # if move.picking_type_id and move.picking_type_id.code == 'outgoing':
+            #     _logger.info("Processing outgoing move - checking available quantity")
+            
+            try:
+                # Get available quantity at source location
+                available_qty = self._get_available_quantity_at_location(
+                    move.product_id, 
+                    move.location_id
+                )
                 
-                try:
-                    # Get available quantity at source location
-                    available_qty = self._get_available_quantity_at_location(
-                        move.product_id, 
-                        move.location_id
+                _logger.info(f"Available quantity calculated: {available_qty}")
+                
+                if move.product_uom_qty > available_qty:
+                    error_msg = (
+                        f'Cannot transfer {move.product_uom_qty} {move.product_uom.name} '
+                        f'of product "{move.product_id.display_name}" '
+                        f'from location "{move.location_id.display_name}". '
+                        f'Only {available_qty} available in stock.'
                     )
+                    _logger.error(f"QUANTITY VALIDATION FAILED: {error_msg}")
+                    raise ValidationError(_(error_msg))
+                else:
+                    _logger.info("✓ Quantity validation passed")
                     
-                    _logger.info(f"Available quantity calculated: {available_qty}")
-                    
-                    if move.product_uom_qty > available_qty:
-                        error_msg = (
-                            f'Cannot transfer {move.product_uom_qty} {move.product_uom.name} '
-                            f'of product "{move.product_id.display_name}" '
-                            f'from location "{move.location_id.display_name}". '
-                            f'Only {available_qty} available in stock.'
-                        )
-                        _logger.error(f"QUANTITY VALIDATION FAILED: {error_msg}")
-                        raise ValidationError(_(error_msg))
-                    else:
-                        _logger.info("✓ Quantity validation passed")
-                        
-                except Exception as e:
-                    _logger.error(f"Error during quantity validation: {str(e)}")
-                    raise
-            else:
-                _logger.info("Skipping validation - not an outgoing move")
+            except Exception as e:
+                _logger.error(f"Error during quantity validation: {str(e)}")
+                raise
+            # else:
+            #     _logger.info("Skipping validation - not an outgoing move")
                     
     def _get_available_quantity_at_location(self, product, location):
         """Calculate available quantity for product at specific location"""
